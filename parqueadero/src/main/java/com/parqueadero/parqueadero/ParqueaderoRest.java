@@ -19,6 +19,7 @@ import dominio.repositorio.RepositorioVehiculo;
 
 @RestController
 @Transactional
+@RequestMapping(value = "/paqueadero")
 public class ParqueaderoRest {
 	
 	@Autowired
@@ -27,7 +28,7 @@ public class ParqueaderoRest {
 	@Autowired
 	RepositorioVehiculo repositorioVehiculo;
 	
-	@RequestMapping(value = "/registrarCarro", method = RequestMethod.POST)
+	@RequestMapping(value = "/registro/carro", method = RequestMethod.POST)
 	@ResponseBody
 	public Parqueadero servicioRegistrarCarro(@RequestBody Carro carro) {
 		Calendar fechaIngreso =  Calendar.getInstance();
@@ -35,7 +36,7 @@ public class ParqueaderoRest {
 	}
 	
 	
-	@RequestMapping(value = "/registrarMoto", method = RequestMethod.POST)
+	@RequestMapping(value = "/registro/moto", method = RequestMethod.POST)
 	@ResponseBody
 	public Parqueadero servicioRegistrarMoto(@RequestBody Moto moto) {
 		Calendar fechaIngreso =  Calendar.getInstance();

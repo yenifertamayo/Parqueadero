@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -28,6 +29,7 @@ import reglas.ValidarPlaca;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DataJpaTest
 public class ParqueaderoApplicationTests {
 
 	@Autowired
@@ -48,18 +50,24 @@ public class ParqueaderoApplicationTests {
 	public void ingresarCarroTest(){
 		
 		Vehiculo vehiculo = new Carro("BIS579");
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaNoHabil(fechaIngreso);
 		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, null));
 		Assert.assertFalse(vigilante.estaParqueado(vehiculo.getPlaca()));
 		Assert.assertNull(repositorioPaqueadero.obtenerVehiculoParqueadoPorPlaca(vehiculo.getPlaca()));
+		Assert.assertEquals(vigilante.ingresarVehiculo(vehiculo, fechaIngreso).getVehiculo(), vehiculo);
 	}
 	
 	@Test
 	public void ingresarMotoTest(){
 		
 		Vehiculo vehiculo = new Moto("SSJ7", 150);
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaNoHabil(fechaIngreso);
 		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, null));
 		Assert.assertFalse(vigilante.estaParqueado(vehiculo.getPlaca()));
 		Assert.assertNull(repositorioPaqueadero.obtenerVehiculoParqueadoPorPlaca(vehiculo.getPlaca()));
+		Assert.assertEquals(vigilante.ingresarVehiculo(vehiculo, fechaIngreso).getVehiculo(), vehiculo);
 	}
 	
 	@Test
@@ -109,6 +117,49 @@ public class ParqueaderoApplicationTests {
 		Assert.assertFalse(validarPlaca.esPosibleIngreso(vehiculo, fechaIngreso));
 	}
 	
+	@Test
+	public void esPosibleIngresoTest(){
+		Vehiculo vehiculo = new Carro("BSD345");
+		Calendar fechaIngreso = Calendar.getInstance();
+		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, fechaIngreso));
+	}
+	
+	@Test
+	public void noEstaParqueadoMotoTest(){
+		
+		Vehiculo vehiculo = new Moto("SSD345B", 125);
+		Calendar fechaIngreso = Calendar.getInstance();		
+		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, fechaIngreso));
+	}
+	
+	
+	@Test
+	public void estaParqueadoMotoTest(){
+		
+		Vehiculo vehiculo = new Moto("SSD345B", 125);
+		repositorioVehiculo.agregar(vehiculo);
+		Calendar fechaIngreso = Calendar.getInstance();		
+		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, fechaIngreso));
+	}
+	
+	@Test
+	public void noEstaParqueadoCarroTest(){
+		
+		Vehiculo vehiculo = new Carro("SSD345B");
+		Calendar fechaIngreso = Calendar.getInstance();		
+		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, fechaIngreso));
+	}
+	
+	
+	@Test
+	public void estaParqueadoCarroTest(){
+		
+		Vehiculo vehiculo = new Carro("SSD345B");
+		repositorioVehiculo.agregar(vehiculo);
+		Calendar fechaIngreso = Calendar.getInstance();		
+		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, fechaIngreso));
+	}
+
 	@Test
 	public void ingresarMotoConPlacaADiaHabilTest(){
 		
@@ -205,7 +256,6 @@ public class ParqueaderoApplicationTests {
 		fecha.set(Calendar.MILLISECOND, 0);
 		fecha.set(Calendar.SECOND, 0);
 	}
-	
 	
 	private void asignarFechaHabil(Calendar fecha) {
 		

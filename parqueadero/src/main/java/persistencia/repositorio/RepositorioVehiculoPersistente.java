@@ -26,7 +26,8 @@ public class RepositorioVehiculoPersistente implements RepositorioVehiculo, Repo
 	@Override
 	public void agregar(Vehiculo vehiculo) {
 
-		entityManager.persist(VehiculoBuilder.convertirAEntity(vehiculo));
+		VehiculoEntity vehiculoEntity = VehiculoBuilder.convertirAEntity(vehiculo);
+		entityManager.persist(vehiculoEntity);
 	}
 
 	@Override

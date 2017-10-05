@@ -12,6 +12,7 @@ public class Vigilante {
 	private List<ValidarReglasIngreso> reglasParqueadero;
 	
 	public Vigilante(RepositorioPaqueadero repositorioPaqueadero, List<ValidarReglasIngreso> reglasParqueadero) {
+		
 		this.repositorioPaqueadero = repositorioPaqueadero; 
 		this.reglasParqueadero = reglasParqueadero;
 	}
@@ -28,7 +29,6 @@ public class Vigilante {
 	}
 			
 	
-	
 	public Parqueadero ingresarVehiculo(Vehiculo vehiculo, Calendar fechaIngreso) {
 		
 		if(!estaParqueado(vehiculo.getPlaca())){
@@ -36,6 +36,7 @@ public class Vigilante {
 			if(esPosibleIngreso(vehiculo, fechaIngreso)){
 				
 				Parqueadero parqueadero =  new Parqueadero(fechaIngreso, null, vehiculo, 0);
+				
 				repositorioPaqueadero.agregar(parqueadero);
 				
 				return parqueadero;
@@ -44,6 +45,7 @@ public class Vigilante {
 		}
 		return null;
 	}
+	
 	
 	public boolean estaParqueado(String placa) {
 		

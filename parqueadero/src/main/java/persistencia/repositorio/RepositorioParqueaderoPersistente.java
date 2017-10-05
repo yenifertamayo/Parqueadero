@@ -34,7 +34,7 @@ public class RepositorioParqueaderoPersistente implements RepositorioPaqueadero{
 		ParqueaderoEntity parqueaderoEntity = buildParqueadero(parqueadero);
 		
 		entityManager.persist(parqueaderoEntity);
-				
+	
 	}
 	
 	public ParqueaderoEntity buildParqueadero(Parqueadero parqueadero) {

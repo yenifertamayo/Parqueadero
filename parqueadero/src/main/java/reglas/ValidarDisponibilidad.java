@@ -29,7 +29,7 @@ public class ValidarDisponibilidad implements ValidarReglasIngreso{
 			
 			return false;
 		}
+		
 		throw new ParqueaderoException("No hay cupo");
-
 	}
 }
