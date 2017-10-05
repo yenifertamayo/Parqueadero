@@ -3,7 +3,6 @@ package dominio;
 import java.util.Calendar;
 import java.util.List;
 
-import dominio.excepcion.ParqueaderoException;
 import dominio.repositorio.RepositorioPaqueadero;
 import reglas.ValidarReglasIngreso;
 
@@ -41,6 +40,7 @@ public class Vigilante {
 				
 				return parqueadero;
 			}
+			return null;
 		}
 		return null;
 	}
