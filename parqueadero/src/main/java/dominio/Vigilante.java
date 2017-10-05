@@ -41,11 +41,8 @@ public class Vigilante {
 				
 				return parqueadero;
 			}
-			
-			throw new ParqueaderoException("Fallo esta operacion");
 		}
-		
-		throw new ParqueaderoException("El vehiculo ya se encuentra parqueado");
+		return null;
 	}
 	
 	public boolean estaParqueado(String placa) {
