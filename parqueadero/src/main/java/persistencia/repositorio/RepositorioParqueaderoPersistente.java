@@ -19,7 +19,6 @@ public class RepositorioParqueaderoPersistente implements RepositorioPaqueadero{
 
 	private static final String PLACA = "placa";
 	private static final String PARQUEADO_POR_PLACA = "Parqueadero.findByPlaca";
-	private static final String CARRO = "Carro";
 	private static final String CANTIDAD_VEHICULOS = "Parqueadero.findVehiculo";
 
 	
@@ -75,21 +74,9 @@ public class RepositorioParqueaderoPersistente implements RepositorioPaqueadero{
 
 	@Override
 	public Long cantidadVehiculos(Vehiculo vehiculo) {
-		
 		VehiculoEntity vehiculoEntity = VehiculoBuilder.convertirAEntity(vehiculo);
-
-		if (vehiculoEntity.getTipo().equals(CARRO)){
-			
-			Query query = entityManager.createNamedQuery(CANTIDAD_VEHICULOS );
-			query.setParameter("tipo", vehiculoEntity.getTipo());
-			
-			return (Long) query.getSingleResult();
-		}
-		
-		else{
-			Query query = entityManager.createNamedQuery(CANTIDAD_VEHICULOS );
-			query.setParameter("tipo", vehiculoEntity.getTipo());
-			return (Long) query.getSingleResult();
-		}
+		Query query = entityManager.createNamedQuery(CANTIDAD_VEHICULOS );
+		query.setParameter("tipo", vehiculoEntity.getTipo());
+		return (Long) query.getSingleResult();
 	}
 }

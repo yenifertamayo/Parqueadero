@@ -11,6 +11,8 @@ import dominio.repositorio.RepositorioPaqueadero;
 
 public class ValidarDisponibilidad implements ValidarReglasIngreso{
 	
+	private static final int MAXIMO_CARROS = 20;
+	private static final int MAXIMO_MOTOS = 10;
 	private RepositorioPaqueadero repositorioPaqueadero;
 	
 	
@@ -21,17 +23,12 @@ public class ValidarDisponibilidad implements ValidarReglasIngreso{
 
 	@Override
 	public boolean esPosibleIngreso(Vehiculo vehiculo, Calendar fechaIngreso) {
+		Long numeroVehiculos =repositorioPaqueadero.cantidadVehiculos(vehiculo);
 		
-		
-		if(vehiculo instanceof Moto && repositorioPaqueadero.cantidadVehiculos(vehiculo) < 1){
+		if((vehiculo instanceof Moto && numeroVehiculos < MAXIMO_MOTOS ) || (vehiculo instanceof Carro && numeroVehiculos < MAXIMO_CARROS)){
 			
 			return false;
 		}
-		
-		else if (vehiculo instanceof Carro && repositorioPaqueadero.cantidadVehiculos(vehiculo) < 2) {
-			return false;
-		}
-		
 		throw new ParqueaderoException("No hay cupo");
 
 	}
