@@ -38,7 +38,7 @@ public class RepositorioParqueaderoPersistente implements RepositorioPaqueadero{
 				
 	}
 	
-	private ParqueaderoEntity buildParqueadero(Parqueadero parqueadero) {
+	public ParqueaderoEntity buildParqueadero(Parqueadero parqueadero) {
 		
 		VehiculoEntity vehiculoEntity = VehiculoBuilder.convertirAEntity(parqueadero.getVehiculo());
 		ParqueaderoEntity parqueaderoEntity = new ParqueaderoEntity();

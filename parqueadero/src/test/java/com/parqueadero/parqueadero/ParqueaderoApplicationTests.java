@@ -20,6 +20,7 @@ import dominio.excepcion.ParqueaderoException;
 import dominio.repositorio.RepositorioPaqueadero;
 import dominio.repositorio.RepositorioVehiculo;
 import persistencia.builder.ParqueaderoBuilder;
+import persistencia.repositorio.RepositorioParqueaderoPersistente;
 import reglas.ValidarCilindrajeMoto;
 import reglas.ValidarDisponibilidad;
 import reglas.ValidarPlaca;
@@ -175,7 +176,6 @@ public class ParqueaderoApplicationTests {
 	
 	
 	@Test
-	
 	public void parqueaderoEntityTest(){
 		
 		Vehiculo vehiculo = new Moto("BIS579", 125);
@@ -184,7 +184,15 @@ public class ParqueaderoApplicationTests {
 		Assert.assertNotNull(ParqueaderoBuilder.convertirAEntity(parqueadero));
 	}
 	
-	
+	@Test
+	public void parqueaderoEntityBuildTest(){
+		
+		Vehiculo vehiculo = new Moto("BIS579", 125);
+		Calendar fechaIngreso = Calendar.getInstance();
+		Parqueadero parqueadero = new Parqueadero(fechaIngreso, null, vehiculo, 0);
+		RepositorioParqueaderoPersistente repositorioParqueaderoPersistente = new RepositorioParqueaderoPersistente(null);
+		Assert.assertNotNull(repositorioParqueaderoPersistente.buildParqueadero(parqueadero));
+	}
 	
 	
 	private void asignarFechaNoHabil(Calendar fecha) {
