@@ -18,18 +18,4 @@ public class ParqueaderoBuilder {
 		
 		return parqueaderoEntity;
 	}
-	
-	public Parqueadero convertirParqueadero(ParqueaderoEntity parqueaderoEntity) {
-		
-		Parqueadero parqueadero = null;
-		
-		if(parqueaderoEntity != null){
-			
-			Vehiculo vehiculo = VehiculoBuilder.convertirVehiculo(parqueaderoEntity.getVehiculo());
-			parqueadero = new Parqueadero(parqueaderoEntity.getFechaIngreso(), parqueaderoEntity.getFechaSalida(), vehiculo, parqueaderoEntity.getValorAPagar()); 
-		}
-		
-		return parqueadero;
-	}
-	
 }

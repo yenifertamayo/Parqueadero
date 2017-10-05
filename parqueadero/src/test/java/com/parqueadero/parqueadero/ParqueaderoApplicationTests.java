@@ -58,6 +58,7 @@ public class ParqueaderoApplicationTests {
 		Assert.assertEquals(vigilante.ingresarVehiculo(vehiculo, fechaIngreso).getVehiculo(), vehiculo);
 	}
 	
+	
 	@Test
 	public void ingresarMotoTest(){
 		

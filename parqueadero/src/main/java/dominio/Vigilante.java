@@ -31,18 +31,15 @@ public class Vigilante {
 	
 	public Parqueadero ingresarVehiculo(Vehiculo vehiculo, Calendar fechaIngreso) {
 		
-		if(!estaParqueado(vehiculo.getPlaca())){
+		if(!estaParqueado(vehiculo.getPlaca()) && esPosibleIngreso(vehiculo, fechaIngreso)){
 			
-			if(esPosibleIngreso(vehiculo, fechaIngreso)){
-				
 				Parqueadero parqueadero =  new Parqueadero(fechaIngreso, null, vehiculo, 0);
 				
 				repositorioPaqueadero.agregar(parqueadero);
 				
 				return parqueadero;
 			}
-			return null;
-		}
+		
 		return null;
 	}
 	
