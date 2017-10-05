@@ -173,6 +173,20 @@ public class ParqueaderoApplicationTests {
 		Assert.assertFalse(validarDisponibilidad.esPosibleIngreso(vehiculo, null));
 	}
 	
+	
+	@Test
+	
+	public void parqueaderoEntityTest(){
+		
+		Vehiculo vehiculo = new Moto("BIS579", 125);
+		Calendar fechaIngreso = Calendar.getInstance();
+		Parqueadero parqueadero = new Parqueadero(fechaIngreso, null, vehiculo, 0);
+		Assert.assertNotNull(ParqueaderoBuilder.convertirAEntity(parqueadero));
+	}
+	
+	
+	
+	
 	private void asignarFechaNoHabil(Calendar fecha) {
 		
 		fecha.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
