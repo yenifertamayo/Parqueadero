@@ -7,25 +7,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import dominio.Vigilante;
-import dominio.repositorio.RepositorioRecibo;
-import reglas.DisponibilidadVehiculos;
-import reglas.PlacaEmpiezaPorA;
-import reglas.ReglasIngreso;
+import dominio.repositorio.RepositorioPaqueadero;
+import reglas.ValidarDisponibilidad;
+import reglas.ValidarPlaca;
+import reglas.ValidarReglasIngreso;
 
 @Configuration
 public class ParqueaderoConfig {
 	
 	@Bean
-	public Vigilante crearVigilante(RepositorioRecibo repositorioRecibo){
-		return new Vigilante(repositorioRecibo, agregarReglas(repositorioRecibo));
+	public Vigilante crearVigilante(RepositorioPaqueadero repositorioPaqueadero){
+		return new Vigilante(repositorioPaqueadero, agregarReglas(repositorioPaqueadero));
 		
 	}
 	
-	public List<ReglasIngreso> agregarReglas(RepositorioRecibo repositorioRecibo) {
+	public List<ValidarReglasIngreso> agregarReglas(RepositorioPaqueadero repositorioPaqueadero) {
 		
-		List<ReglasIngreso> reglasParqueadero=new ArrayList<>();
-		reglasParqueadero.add(new PlacaEmpiezaPorA());
-		reglasParqueadero.add(new DisponibilidadVehiculos(repositorioRecibo));
+		List<ValidarReglasIngreso> reglasParqueadero=new ArrayList<>();
+		reglasParqueadero.add(new ValidarPlaca());
+		reglasParqueadero.add(new ValidarDisponibilidad(repositorioPaqueadero));
 		return reglasParqueadero;
 	}
+
 }

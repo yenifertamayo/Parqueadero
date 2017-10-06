@@ -1,24 +1,21 @@
 package persistencia.builder;
 
-import dominio.Recibo;
-import persistencia.entity.ReciboEntity;
+import dominio.Parqueadero;
+import dominio.Vehiculo;
+import persistencia.entity.ParqueaderoEntity;
 import persistencia.entity.VehiculoEntity;
 
 public class ParqueaderoBuilder {
 	
-	private ParqueaderoBuilder(){
+	public static ParqueaderoEntity convertirAEntity(Parqueadero parqueadero){
 		
-	}
-	
-	public static ReciboEntity convertirAEntity(Recibo recibo){
+		VehiculoEntity vehiculo = VehiculoBuilder.convertirAEntity(parqueadero.getVehiculo());
+		ParqueaderoEntity parqueaderoEntity = new ParqueaderoEntity();
+		parqueaderoEntity.setFechaIngreso(parqueadero.getFechaIngreso());
+		parqueaderoEntity.setFechaSalida(parqueadero.getFechaSalida());
+		parqueaderoEntity.setValorAPagar(parqueadero.getValorAPagar());
+		parqueaderoEntity.setVehiculoEntity(vehiculo);
 		
-		VehiculoEntity vehiculo = VehiculoBuilder.convertirAEntity(recibo.getVehiculo());
-		ReciboEntity reciboEntity = new ReciboEntity();
-		reciboEntity.setFechaIngreso(recibo.getFechaIngreso());
-		reciboEntity.setFechaSalida(recibo.getFechaSalida());
-		reciboEntity.setValorAPagar(recibo.getValorAPagar());
-		reciboEntity.setVehiculoEntity(vehiculo);
-		
-		return reciboEntity;
+		return parqueaderoEntity;
 	}
 }
