@@ -20,6 +20,7 @@ public class VehiculoBuilder {
 			vehiculoEntity.setTipo("Moto");
 			vehiculoEntity.setPlaca(vehiculo.getPlaca());
 			vehiculoEntity.setCilindraje(((Moto) vehiculo).getCilindraje());
+			
 		}
 		
 		else {
@@ -27,9 +28,10 @@ public class VehiculoBuilder {
 			vehiculoEntity.setPlaca(vehiculo.getPlaca());
 			vehiculoEntity.setCilindraje(0);
 		}
+		
 		return vehiculoEntity;
-	}
-
+	}	
+	
 	public static Vehiculo convertirVehiculo(VehiculoEntity vehiculoEntity){
 		
 		Vehiculo vehiculo = null;
