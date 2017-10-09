@@ -24,9 +24,9 @@ public class CilindrajeMoto implements ReglasSalida{
 
 	private double validarCilindraje(Recibo recibo) {
 		
-		if(((Moto) recibo.getVehiculo()).getCilindraje() > Parqueadero.MAXIMO_CILINDRAJE){
+		if(((Moto) recibo.getVehiculo()).getCilindraje() > 500){
 			
-			recibo.setValorAPagar(Parqueadero.EXCEDENTE_ALTO_CILINDRAJE);
+			recibo.setValorAPagar(2000);
 			
 			return recibo.getValorAPagar();
 		}

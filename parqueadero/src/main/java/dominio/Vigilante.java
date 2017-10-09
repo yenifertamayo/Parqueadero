@@ -3,51 +3,70 @@ package dominio;
 import java.util.Calendar;
 import java.util.List;
 
-import dominio.repositorio.RepositorioPaqueadero;
-import reglas.ValidarReglasIngreso;
+import dominio.excepcion.ParqueaderoException;
+import dominio.repositorio.RepositorioRecibo;
+import reglas.ReglasIngreso;
 
 public class Vigilante {
 
-	private RepositorioPaqueadero repositorioPaqueadero;
-	private List<ValidarReglasIngreso> reglasParqueadero;
+	private RepositorioRecibo repositorioRecibo;
+	private List<ReglasIngreso> reglasParqueadero;
+	private Parqueadero parqueadero;
 	
-	public Vigilante(RepositorioPaqueadero repositorioPaqueadero, List<ValidarReglasIngreso> reglasParqueadero) {
+	public Vigilante(RepositorioRecibo repositorioRecibo, List<ReglasIngreso> reglasParqueadero, Parqueadero parqueadero) {
 		
-		this.repositorioPaqueadero = repositorioPaqueadero; 
+		this.repositorioRecibo = repositorioRecibo; 
 		this.reglasParqueadero = reglasParqueadero;
+		this.parqueadero = parqueadero;
 	}
 
 
 	public boolean esPosibleIngreso(Vehiculo vehiculo, Calendar fechaIngreso) {
 		
-		for (ValidarReglasIngreso reglaEsCorrecto : reglasParqueadero) {
+		for (ReglasIngreso reglaEsCorrecto : reglasParqueadero) {
+
 			if(reglaEsCorrecto.esPosibleIngreso(vehiculo, fechaIngreso)){
-				return false;
+					
+					return false;
 			}
 		}
 		return true;
 	}
 			
 	
-	public Parqueadero ingresarVehiculo(Vehiculo vehiculo, Calendar fechaIngreso) {
+	public Recibo ingresarVehiculo(Vehiculo vehiculo, Calendar fechaIngreso) {
+
+		cumpleReglasParqueadero(vehiculo, fechaIngreso);
+		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);
+		repositorioRecibo.agregar(recibo);
+		return recibo;
+	}
+
+	private Vehiculo cumpleReglasParqueadero(Vehiculo vehiculo, Calendar fechaIngreso) {
 		
-		if(!estaParqueado(vehiculo.getPlaca()) && esPosibleIngreso(vehiculo, fechaIngreso)){
+		if(!esPosibleIngreso(vehiculo, fechaIngreso)){
 			
+			throw new ParqueaderoException("No es posible ingreso");
+		}
 				
+		return noEstaParqueado(vehiculo);
+	}
+
+
+	private Vehiculo noEstaParqueado(Vehiculo vehiculo) {
+		
+		if(estaParqueado(vehiculo.getPlaca())){
+			
+			throw new ParqueaderoException("El vehiculo ya se encuentra parqueado");
 		}
 		
-		Parqueadero parqueadero =  new Parqueadero(fechaIngreso, null, vehiculo, 0);
-		
-		repositorioPaqueadero.agregar(parqueadero);
-		
-		return parqueadero;
-		
+		return vehiculo;
 	}
 	
 	
 	public boolean estaParqueado(String placa) {
 		
-		Vehiculo vehiculoEstaParqueado = repositorioPaqueadero.obtenerVehiculoParqueadoPorPlaca(placa);
+		Vehiculo vehiculoEstaParqueado = repositorioRecibo.obtenerVehiculoReciboPorPlaca(placa);
 		
 		return vehiculoEstaParqueado != null;
 	}

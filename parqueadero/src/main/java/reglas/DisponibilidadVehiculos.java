@@ -11,10 +11,14 @@ import dominio.repositorio.RepositorioRecibo;
 
 public class DisponibilidadVehiculos implements ReglasIngreso{
 	
+	
+	private Parqueadero parqueadero;
+	
 	private RepositorioRecibo repositorioRecibo;
-		
-	public DisponibilidadVehiculos(RepositorioRecibo repositorioRecibo) {
+			
+	public DisponibilidadVehiculos(RepositorioRecibo repositorioRecibo, Parqueadero parqueadero) {
 		this.repositorioRecibo = repositorioRecibo;
+		this.parqueadero = parqueadero;
 	}
 
 	@Override
@@ -32,7 +36,7 @@ public class DisponibilidadVehiculos implements ReglasIngreso{
 
 	private boolean disponibilidadCarros(Long numeroVehiculos) {
 		
-		if(numeroVehiculos >= Parqueadero.MAXIMO_CARROS){
+		if(numeroVehiculos >= parqueadero.getMaximoCarros()){
 			
 			throw new ParqueaderoException("No hay cupo");
 		}
@@ -42,7 +46,7 @@ public class DisponibilidadVehiculos implements ReglasIngreso{
 
 	private boolean disponibilidadMoto(Long numeroVehiculos) {
 		
-		if(numeroVehiculos >= Parqueadero.MAXIMO_MOTOS){
+		if(numeroVehiculos >= parqueadero.getMaximoMotos()){
 			
 			throw new ParqueaderoException("No hay cupo");
 		}

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dominio.Carro;
-import dominio.Parqueadero;
+import dominio.Recibo;
 import dominio.Moto;
 import dominio.Vigilante;
 import dominio.repositorio.RepositorioVehiculo;
@@ -30,7 +30,7 @@ public class ParqueaderoRest {
 	
 	@RequestMapping(value = "/registro/carro", method = RequestMethod.POST)
 	@ResponseBody
-	public Parqueadero servicioRegistrarCarro(@RequestBody Carro carro) {
+	public Recibo servicioRegistrarCarro(@RequestBody Carro carro) {
 		Calendar fechaIngreso =  Calendar.getInstance();
 		return vigilante.ingresarVehiculo(carro, fechaIngreso);
 	}
@@ -38,7 +38,7 @@ public class ParqueaderoRest {
 	
 	@RequestMapping(value = "/registro/moto", method = RequestMethod.POST)
 	@ResponseBody
-	public Parqueadero servicioRegistrarMoto(@RequestBody Moto moto) {
+	public Recibo servicioRegistrarMoto(@RequestBody Moto moto) {
 		Calendar fechaIngreso =  Calendar.getInstance();
 		return vigilante.ingresarVehiculo(moto, fechaIngreso);
 	}

@@ -20,6 +20,7 @@ public class VehiculoBuilder {
 			vehiculoEntity.setTipo("Moto");
 			vehiculoEntity.setPlaca(vehiculo.getPlaca());
 			vehiculoEntity.setCilindraje(((Moto) vehiculo).getCilindraje());
+			
 		}
 		
 		else {
@@ -27,25 +28,25 @@ public class VehiculoBuilder {
 			vehiculoEntity.setPlaca(vehiculo.getPlaca());
 			vehiculoEntity.setCilindraje(0);
 		}
-		return vehiculoEntity;
-	}
-
-	public static Vehiculo convertirVehiculo(VehiculoEntity vehiculoEntity){
 		
-		if (vehiculoEntity == null){
-			return null;
-		}
+		return vehiculoEntity;
+	}	
+	
+	public static Vehiculo convertirVehiculo(VehiculoEntity vehiculoEntity){
 		
 		Vehiculo vehiculo = null;
 		
-		if (vehiculoEntity.getTipo().equals("Moto")){
+		if (vehiculoEntity != null) {
 			
-			vehiculo = new Moto(vehiculoEntity.getPlaca(), vehiculoEntity.getCilindraje());
-		}
-		
-		else {
+			if (vehiculoEntity.getTipo().equals("Moto")){
+				
+				vehiculo = new Moto(vehiculoEntity.getPlaca(), vehiculoEntity.getCilindraje());
+			}
 			
-			vehiculo = new Carro(vehiculoEntity.getPlaca());
+			else {
+				
+				vehiculo = new Carro(vehiculoEntity.getPlaca());
+			}
 		}
 		
 		return vehiculo;
