@@ -11,6 +11,7 @@ public class Vigilante {
 
 	private RepositorioRecibo repositorioRecibo;
 	private List<ReglasIngreso> reglasParqueadero;
+	@SuppressWarnings("unused")
 	private Parqueadero parqueadero;
 	
 	public Vigilante(RepositorioRecibo repositorioRecibo, List<ReglasIngreso> reglasParqueadero, Parqueadero parqueadero) {

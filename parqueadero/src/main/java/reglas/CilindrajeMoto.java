@@ -2,7 +2,6 @@ package reglas;
 
 import dominio.Recibo;
 import dominio.Moto;
-import dominio.Parqueadero;
 
 public class CilindrajeMoto implements ReglasSalida{
 

@@ -24,8 +24,8 @@ public class ParqueaderoConfig {
 	
 	@Bean
 	public Parqueadero crearParqueadero() {
-		int maximoCarros = 20;
-		int maximoMotos = 10;
+		int maximoCarros = 2;
+		int maximoMotos = 1;
 		return new Parqueadero(maximoCarros, maximoMotos);
 	}
 
