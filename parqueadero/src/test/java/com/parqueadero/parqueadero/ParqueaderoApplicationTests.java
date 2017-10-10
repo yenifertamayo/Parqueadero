@@ -1,8 +1,12 @@
 package com.parqueadero.parqueadero;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,11 +25,12 @@ import dominio.Vigilante;
 import dominio.excepcion.ParqueaderoException;
 import dominio.repositorio.RepositorioRecibo;
 import dominio.repositorio.RepositorioVehiculo;
-import persistencia.builder.ParqueaderoBuilder;
+import persistencia.builder.ReciboBuilder;
 import persistencia.repositorio.RepositorioReciboPersistente;
 import reglas.CilindrajeMoto;
 import reglas.DisponibilidadVehiculos;
 import reglas.PlacaEmpiezaPorA;
+import reglas.ValorAPagarVehiculo;
 
 
 @RunWith(SpringRunner.class)
@@ -44,7 +49,7 @@ public class ParqueaderoApplicationTests {
 	
 	@Autowired
 	Parqueadero parqueadero;
-	
+
 	@Test
 	public void contextLoads() {
 	}
@@ -60,6 +65,70 @@ public class ParqueaderoApplicationTests {
 		Assert.assertFalse(vigilante.estaParqueado(vehiculo.getPlaca()));
 		Assert.assertNull(repositorioRecibo.obtenerVehiculoReciboPorPlaca(vehiculo.getPlaca()));
 		Assert.assertEquals(vigilante.ingresarVehiculo(vehiculo, fechaIngreso).getVehiculo(), vehiculo);
+	}
+	
+	@Test
+	public void salidaCarroTest(){
+		
+		Vehiculo vehiculo = new Carro("BIS579");
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaDiferenteLunesDomingo(fechaIngreso);
+		repositorioVehiculo.agregar(vehiculo);
+		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);
+		repositorioRecibo.agregar(recibo);
+		Assert.assertTrue(vigilante.estaParqueado(vehiculo.getPlaca()));
+		Assert.assertNotNull(vigilante.obtenerRecibo(vehiculo.getPlaca()));
+		Assert.assertEquals(vigilante.salidaVehiculo(vehiculo.getPlaca()).getVehiculo().getPlaca(), vehiculo.getPlaca());
+	}
+	
+	
+	@Test
+	public void salidaMotoTest(){
+		
+		Vehiculo vehiculo = new Moto("BIS579", 501);
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaDiferenteLunesDomingo(fechaIngreso);
+		repositorioVehiculo.agregar(vehiculo);
+		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);
+		repositorioRecibo.agregar(recibo);
+		Assert.assertTrue(vigilante.estaParqueado(vehiculo.getPlaca()));
+		Assert.assertNotNull(vigilante.obtenerRecibo(vehiculo.getPlaca()));
+		Assert.assertEquals(vigilante.salidaVehiculo(vehiculo.getPlaca()).getVehiculo().getPlaca(), vehiculo.getPlaca());
+	}
+	
+	@Test
+	public void listaVehiculos(){
+		
+		Vehiculo vehiculo = new Moto("BIS579", 501);
+		repositorioVehiculo.agregar(vehiculo);
+		Calendar fechaIngreso = Calendar.getInstance();
+		Calendar fechaSalida = Calendar.getInstance();
+		Recibo recibo = new Recibo(fechaIngreso, fechaSalida, vehiculo, 0);
+		repositorioRecibo.agregar(recibo);
+		Assert.assertNotNull(vigilante.listaVehiculos());
+		Assert.assertNotNull(repositorioRecibo.obtenerListaParqueados());
+	}
+	
+	
+	@Test
+	public void salidaCarroFallaTest(){
+		
+		Vehiculo vehiculo = new Carro("BIS579");
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaDiferenteLunesDomingo(fechaIngreso);
+		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, null));
+		Assert.assertFalse(vigilante.estaParqueado(vehiculo.getPlaca()));
+		Assert.assertNull(repositorioRecibo.obtenerVehiculoReciboPorPlaca(vehiculo.getPlaca()));
+		
+		try {
+
+			vigilante.salidaVehiculo(vehiculo.getPlaca());
+			fail();
+
+		} catch (ParqueaderoException e) {
+
+			Assert.assertEquals("El vehiculo no se encuntra parqueado actualmente", e.getMessage());
+		}
 	}
 	
 	
@@ -200,13 +269,23 @@ public class ParqueaderoApplicationTests {
 		Assert.assertFalse(placaEmpiezaPorA.esPosibleIngreso(vehiculo, fechaIngreso));
 	}
 	
+	
+	@Test
+	public void carroCilindrajeAlto(){
+		
+		Vehiculo vehiculo = new Carro("FJM36A");
+		Recibo recibo = new Recibo(Calendar.getInstance(), null, vehiculo, 0);
+		CilindrajeMoto cilindrajeMoto = new CilindrajeMoto(parqueadero);
+		Assert.assertEquals(0.0, cilindrajeMoto.valorAPagar(recibo), 2000.0);
+	}
+	
 	@Test
 	public void motoConCilindrajeAlto(){
 		
 		Vehiculo vehiculo = new Moto("FJM36A", 550);
 		Recibo recibo = new Recibo(Calendar.getInstance(), null, vehiculo, 0);
-		CilindrajeMoto cilindrajeMoto = new CilindrajeMoto();
-		Assert.assertEquals(cilindrajeMoto.valorAPagar(recibo), 0, 0.0);
+		CilindrajeMoto cilindrajeMoto = new CilindrajeMoto(parqueadero);
+		Assert.assertEquals(2000, cilindrajeMoto.valorAPagar(recibo), 2000.0);
 	}
 	
 	@Test
@@ -214,9 +293,10 @@ public class ParqueaderoApplicationTests {
 		
 		Vehiculo vehiculo = new Moto("FJM36A", 150);
 		Recibo recibo = new Recibo(Calendar.getInstance(), null, vehiculo, 0);
-		CilindrajeMoto cilindrajeMoto = new CilindrajeMoto();
-		Assert.assertEquals(cilindrajeMoto.valorAPagar(recibo), 0, 0.0);
+		CilindrajeMoto cilindrajeMoto = new CilindrajeMoto(parqueadero);
+		Assert.assertEquals(cilindrajeMoto.valorAPagar(recibo), 0.0, 0.0);
 	}
+		
 	
 	@Test
 	public void disponibilidaMotoTest(){
@@ -224,7 +304,6 @@ public class ParqueaderoApplicationTests {
 		Vehiculo vehiculo = new Moto("BIS579", 125);
 		DisponibilidadVehiculos disponibilidadVehiculos = new DisponibilidadVehiculos(repositorioRecibo, parqueadero);
 		Assert.assertFalse(disponibilidadVehiculos.esPosibleIngreso(vehiculo, null));
-		
 	}
 	
 	@Test
@@ -234,15 +313,14 @@ public class ParqueaderoApplicationTests {
 		DisponibilidadVehiculos disponibilidadVehiculos = new DisponibilidadVehiculos(repositorioRecibo, parqueadero);
 		Assert.assertFalse(disponibilidadVehiculos.esPosibleIngreso(vehiculo, null));
 	}
-	
-	
+		
 	@Test
 	public void parqueaderoEntityTest(){
 		
 		Vehiculo vehiculo = new Moto("BIS579", 125);
 		Calendar fechaIngreso = Calendar.getInstance();
 		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);
-		Assert.assertNotNull(ParqueaderoBuilder.convertirAEntity(recibo));
+		Assert.assertNotNull(ReciboBuilder.convertirAEntity(recibo));
 	}
 	
 	@Test
@@ -255,16 +333,70 @@ public class ParqueaderoApplicationTests {
 		Assert.assertNotNull(repositorioReciboPersistente.buildRecibo(recibo));
 	}
 	
+	@Test
+	public void valorAPagarCarroTest(){
+		
+		Vehiculo vehiculo = new Carro("BIS579");
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaEntrada(fechaIngreso);
+		Calendar fechaSalida = Calendar.getInstance();
+		asignarFechaSalida(fechaSalida);
+		Recibo recibo = new Recibo(fechaIngreso, fechaSalida, vehiculo, 0);
+		ValorAPagarVehiculo valorAPagarVehiculo =  new ValorAPagarVehiculo();
+		Assert.assertEquals(valorAPagarVehiculo.valorAPagar(recibo),11000.0, 0.0);
+		
+	}
+	
+	@Test
+	public void valorAPagarMotoTest(){
+		
+		Vehiculo vehiculo = new Moto("BIS579", 125);
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaEntrada(fechaIngreso);
+		Calendar fechaSalida = Calendar.getInstance();
+		asignarFechaSalida(fechaSalida);
+		Recibo recibo = new Recibo(fechaIngreso, fechaSalida, vehiculo, 0);
+		ValorAPagarVehiculo valorAPagarVehiculo =  new ValorAPagarVehiculo();
+		Assert.assertEquals(valorAPagarVehiculo.valorAPagar(recibo),2100.0, 0.0);
+		
+	}
+
+	private void asignarFechaEntrada(Calendar fecha) {
+		
+		fecha.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		fecha.set(Calendar.MONTH,  Calendar.OCTOBER);
+		fecha.set(Calendar.YEAR, 2017);
+		fecha.set(Calendar.HOUR, 6);
+		fecha.set(Calendar.MINUTE, 00);
+		fecha.set(Calendar.MILLISECOND, 00);
+		fecha.set(Calendar.SECOND, 00);
+		fecha.set(Calendar.ZONE_OFFSET, 00);
+		fecha.set(Calendar.DST_OFFSET, 00);
+	}
+	
+	private void asignarFechaSalida(Calendar fecha) {
+		
+		fecha.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		fecha.set(Calendar.MONTH,  Calendar.OCTOBER);
+		fecha.set(Calendar.YEAR, 2017);
+		fecha.set(Calendar.HOUR, 18);
+		fecha.set(Calendar.MINUTE, 0);
+		fecha.set(Calendar.MILLISECOND, 00);
+		fecha.set(Calendar.SECOND, 00);
+		fecha.set(Calendar.ZONE_OFFSET, 00);
+		fecha.set(Calendar.DST_OFFSET, 00);
+	}
+	
 	
 	private void asignarFechaDiferenteLunesDomingo(Calendar fecha) {
 		
-		fecha.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+		fecha.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
 		fecha.set(Calendar.MONTH,  Calendar.OCTOBER);
 		fecha.set(Calendar.YEAR, 2017);
-		fecha.set(Calendar.HOUR, 0);
-		fecha.set(Calendar.MINUTE, 0);
-		fecha.set(Calendar.MILLISECOND, 0);
-		fecha.set(Calendar.SECOND, 0);
+		fecha.set(Calendar.HOUR, 13);
+		fecha.set(Calendar.MINUTE, 59);
+		fecha.set(Calendar.SECOND, 40);
+		fecha.set(Calendar.MILLISECOND, 30);
 	}
 	
 	private void asignarFechaHabilLunes(Calendar fecha) {
@@ -274,7 +406,7 @@ public class ParqueaderoApplicationTests {
 		fecha.set(Calendar.YEAR, 2017);
 		fecha.set(Calendar.HOUR, 0);
 		fecha.set(Calendar.MINUTE, 0);
-		fecha.set(Calendar.MILLISECOND, 0);
+		fecha.set(Calendar.MILLISECOND, 10);
 		fecha.set(Calendar.SECOND, 0);
 	}
 	

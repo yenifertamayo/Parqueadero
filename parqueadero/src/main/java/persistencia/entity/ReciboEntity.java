@@ -2,7 +2,6 @@ package persistencia.entity;
 
 import java.util.Calendar;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,9 +13,9 @@ import javax.persistence.NamedQuery;
 
 @Entity(name = "Recibo")
 
-@NamedQueries({@NamedQuery(name = "Recibo.findByPlaca", query = "SELECT recibo from Recibo recibo where recibo.vehiculoEntity.placa = :placa"),
-@NamedQuery(name = "Recibo.findAll", query = "SELECT recibo from Recibo recibo"),
-@NamedQuery(name = "Recibo.findVehiculo", query = "SELECT COUNT(*) from Recibo recibo where recibo.vehiculoEntity.tipo = :tipo")})
+@NamedQueries({@NamedQuery(name = "Recibo.findByPlaca", query = "SELECT recibo from Recibo recibo where recibo.vehiculoEntity.placa = :placa AND recibo.fechaSalida is null"),
+@NamedQuery(name = "Recibo.findAllParqueados", query = "SELECT recibo from Recibo recibo where recibo.fechaSalida is null"),
+@NamedQuery(name = "Recibo.findVehiculo", query = "SELECT COUNT(*) from Recibo recibo where recibo.vehiculoEntity.tipo = :tipo AND recibo.fechaSalida is null")})
 
 public class ReciboEntity {
 
@@ -24,21 +23,15 @@ public class ReciboEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "ID_VEHICULO")
 	private VehiculoEntity vehiculoEntity;
 	private Calendar fechaIngreso;
 	private Calendar fechaSalida;
 	private double valorAPagar;
 	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public VehiculoEntity getVehiculo() {
-		return getVehiculo();
+		return vehiculoEntity;
 	}
 	public void setVehiculoEntity(VehiculoEntity vehiculoEntity) {
 		this.vehiculoEntity = vehiculoEntity;

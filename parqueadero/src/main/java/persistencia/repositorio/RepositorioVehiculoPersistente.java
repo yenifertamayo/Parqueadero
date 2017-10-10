@@ -1,5 +1,8 @@
 package persistencia.repositorio;
 
+
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -30,11 +33,19 @@ public class RepositorioVehiculoPersistente implements RepositorioVehiculo, Repo
 		entityManager.persist(vehiculoEntity);
 	}
 
-	@Override
+	@SuppressWarnings("rawtypes")
 	public VehiculoEntity obtenerVehiculoEntityAParquear(String placa) {
 		
 		Query consulta = entityManager.createNamedQuery(VEHICULO_POR_PLACA);
 		consulta.setParameter(PLACA, placa);
-		return (VehiculoEntity) consulta.getSingleResult();
+		
+		List resultList = consulta.getResultList();
+		return !(resultList).isEmpty() ? (VehiculoEntity) resultList.get(0) : null;
+	}
+
+	@Override
+	public Vehiculo obtenerVehiculo(String placa) {
+		VehiculoEntity vehiculoEntity = obtenerVehiculoEntityAParquear(placa);
+		return VehiculoBuilder.convertirVehiculo(vehiculoEntity);
 	}
 }

@@ -20,6 +20,7 @@ public class DisponibilidadVehiculos implements ReglasIngreso{
 		this.repositorioRecibo = repositorioRecibo;
 		this.parqueadero = parqueadero;
 	}
+	
 
 	@Override
 	public boolean esPosibleIngreso(Vehiculo vehiculo, Calendar fechaIngreso) {
@@ -34,6 +35,7 @@ public class DisponibilidadVehiculos implements ReglasIngreso{
 		return disponibilidadCarros(numeroVehiculos);		
 	}
 
+	
 	private boolean disponibilidadCarros(Long numeroVehiculos) {
 		
 		if(numeroVehiculos >= parqueadero.getMaximoCarros()){
@@ -44,6 +46,7 @@ public class DisponibilidadVehiculos implements ReglasIngreso{
 		return false;
 	}
 
+	
 	private boolean disponibilidadMoto(Long numeroVehiculos) {
 		
 		if(numeroVehiculos >= parqueadero.getMaximoMotos()){

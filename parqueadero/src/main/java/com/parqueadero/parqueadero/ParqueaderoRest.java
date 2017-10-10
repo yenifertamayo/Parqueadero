@@ -1,6 +1,7 @@
 package com.parqueadero.parqueadero;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dominio.Carro;
+import dominio.ListaRecibo;
 import dominio.Recibo;
+import dominio.SalidaVehiculo;
 import dominio.Moto;
 import dominio.Vigilante;
 import dominio.repositorio.RepositorioVehiculo;
@@ -35,12 +38,26 @@ public class ParqueaderoRest {
 		return vigilante.ingresarVehiculo(carro, fechaIngreso);
 	}
 	
-	
 	@RequestMapping(value = "/registro/moto", method = RequestMethod.POST)
 	@ResponseBody
 	public Recibo servicioRegistrarMoto(@RequestBody Moto moto) {
 		Calendar fechaIngreso =  Calendar.getInstance();
 		return vigilante.ingresarVehiculo(moto, fechaIngreso);
+	}
+	
+	@RequestMapping(value = "/salida/vehiculo", method = RequestMethod.POST)
+	@ResponseBody
+	public Recibo servicioRegistrarMoto(@RequestBody SalidaVehiculo salidavehiculo) {
+		
+		return vigilante.salidaVehiculo(salidavehiculo.getPlaca());
+	}
+	
+	@RequestMapping(value = "/lista/vehiculos", method = RequestMethod.GET)
+	@ResponseBody
+	
+	public List<ListaRecibo> servicioListarLibros() {
+		
+		return vigilante.listaVehiculos();
 	}
 	
 }

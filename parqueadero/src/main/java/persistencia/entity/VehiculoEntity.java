@@ -26,14 +26,6 @@ public class VehiculoEntity {
 	@Column
 	private int cilindraje;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getPlaca() {
 		return placa;
 	}
