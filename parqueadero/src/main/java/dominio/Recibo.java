@@ -9,11 +9,6 @@ public class Recibo {
 	private Vehiculo vehiculo;
 	private double valorAPagar;
 
-	
-	public Recibo(Vehiculo vehiculo) {
-		this.vehiculo = vehiculo;
-	}
-
 	public Recibo(Calendar fechaIngreso, Calendar fechaSalida, Vehiculo vehiculo, double valorAPagar) {
 		super();
 		this.fechaIngreso = fechaIngreso;

@@ -1,12 +1,7 @@
 package com.parqueadero.parqueadero;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import dominio.Carro;
+import dominio.ListaRecibo;
 import dominio.Recibo;
 import dominio.Moto;
 import dominio.Parqueadero;
@@ -65,6 +62,28 @@ public class ParqueaderoApplicationTests {
 		Assert.assertFalse(vigilante.estaParqueado(vehiculo.getPlaca()));
 		Assert.assertNull(repositorioRecibo.obtenerVehiculoReciboPorPlaca(vehiculo.getPlaca()));
 		Assert.assertEquals(vigilante.ingresarVehiculo(vehiculo, fechaIngreso).getVehiculo(), vehiculo);
+	}	
+
+	@Test
+	public void ingresarCarroFallaTest(){
+		
+		Vehiculo vehiculo = new Moto("BIS579", 501);
+		Calendar fechaIngreso = Calendar.getInstance();
+		asignarFechaDiferenteLunesDomingo(fechaIngreso);
+		repositorioVehiculo.agregar(vehiculo);
+		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);
+		repositorioRecibo.agregar(recibo);
+		Assert.assertTrue(vigilante.esPosibleIngreso(vehiculo, null));
+	
+		try {
+
+			vigilante.noEstaParqueado(vehiculo);
+			fail();
+
+		} catch (ParqueaderoException e) {
+
+			Assert.assertEquals("El vehiculo ya se encuentra parqueado", e.getMessage());
+		}
 	}
 	
 	@Test
@@ -97,18 +116,49 @@ public class ParqueaderoApplicationTests {
 	}
 	
 	@Test
-	public void listaVehiculos(){
+	public void listaVehiculosMotoTest(){
 		
 		Vehiculo vehiculo = new Moto("BIS579", 501);
 		repositorioVehiculo.agregar(vehiculo);
 		Calendar fechaIngreso = Calendar.getInstance();
-		Calendar fechaSalida = Calendar.getInstance();
-		Recibo recibo = new Recibo(fechaIngreso, fechaSalida, vehiculo, 0);
+		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);
 		repositorioRecibo.agregar(recibo);
 		Assert.assertNotNull(vigilante.listaVehiculos());
 		Assert.assertNotNull(repositorioRecibo.obtenerListaParqueados());
 	}
 	
+	@Test
+	public void listaVehiculosCarroTest(){
+		
+		Vehiculo vehiculo = new Carro("FIS579");
+		repositorioVehiculo.agregar(vehiculo);
+		Calendar fechaIngreso = Calendar.getInstance();
+		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);
+		repositorioRecibo.agregar(recibo);
+		ListaRecibo listaRecibo = new ListaRecibo("FIS579", "Carro", fechaIngreso);
+		Assert.assertNotNull(vigilante.listaVehiculos());
+		Assert.assertNotNull(repositorioRecibo.obtenerListaParqueados());
+		Assert.assertEquals(repositorioRecibo.obtenerListaParqueados().get(0).getPlaca(), listaRecibo.getPlaca());
+		Assert.assertEquals(repositorioRecibo.obtenerListaParqueados().get(0).getTipo(), listaRecibo.getTipo());
+		Assert.assertEquals(repositorioRecibo.obtenerListaParqueados().get(0).getFechaIngreso(), listaRecibo.getFechaIngreso());
+
+
+	}
+	
+	
+	@Test
+	public void listaVehiculosVaciaTest(){
+		
+		try {
+
+			repositorioRecibo.obtenerListaParqueados();
+			fail();
+
+		} catch (ParqueaderoException e) {
+
+			Assert.assertEquals("No hay vehiculos parqueados", e.getMessage());
+		}
+	}
 	
 	@Test
 	public void salidaCarroFallaTest(){

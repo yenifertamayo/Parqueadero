@@ -12,7 +12,7 @@ public class VehiculoBuilder {
 	private VehiculoBuilder(){}
 	
 	public static VehiculoEntity convertirAEntity(Vehiculo vehiculo){
-		
+				
 		VehiculoEntity vehiculoEntity = new VehiculoEntity();
 		
 		if(vehiculo instanceof Moto){

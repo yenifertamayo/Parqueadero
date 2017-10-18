@@ -52,14 +52,8 @@ public class ValorAPagarVehiculo implements ReglasSalida{
 		double fechaInicio = fechaIngreso.getTimeInMillis();
 		double fechaFin = fechaSalida.getTimeInMillis();
 		double tiempoExacto = fechaFin - fechaInicio;
-
-		double horas = Math.ceil((tiempoExacto / (60 * 60 * 1000)));
-		for(int i = 9; horas >= i; i+=9){
-			
-			horas-=9;
-		}
-		
-		return horas;
+		double horas = Math.ceil(tiempoExacto/(60 * 60 * 1000));
+		return horas%9;
 	}
 	
 	public int cantidadDias(Calendar fechaIngreso, Calendar fechaSalida){

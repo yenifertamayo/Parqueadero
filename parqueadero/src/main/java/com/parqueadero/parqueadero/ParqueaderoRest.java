@@ -49,12 +49,11 @@ public class ParqueaderoRest {
 	@ResponseBody
 	public Recibo servicioRegistrarMoto(@RequestBody SalidaVehiculo salidavehiculo) {
 		
-		return vigilante.salidaVehiculo(salidavehiculo.getPlaca());
+		return vigilante.salidaVehiculo(salidavehiculo.getPlaca().toUpperCase());
 	}
 	
 	@RequestMapping(value = "/lista/vehiculos", method = RequestMethod.GET)
 	@ResponseBody
-	
 	public List<ListaRecibo> servicioListarLibros() {
 		
 		return vigilante.listaVehiculos();

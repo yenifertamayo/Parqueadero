@@ -4,8 +4,6 @@ public class SalidaVehiculo {
 	
 	private String placa;
 
-	
-	
 	public SalidaVehiculo() {
 		super();
 	}

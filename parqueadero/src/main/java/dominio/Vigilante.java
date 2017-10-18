@@ -53,9 +53,11 @@ public class Vigilante {
 	
 	public Recibo ingresarVehiculo(Vehiculo vehiculo, Calendar fechaIngreso) {
 
+		vehiculo.setPlaca(vehiculo.getPlaca().toUpperCase());
 		cumpleReglasParqueadero(vehiculo, fechaIngreso);
 		
 		if(obtenerVehiculoPorPlaca(vehiculo.getPlaca())){
+			
 			repositorioVehiculo.agregar(vehiculo);
 		}
 		Recibo recibo = new Recibo(fechaIngreso, null, vehiculo, 0);	
@@ -91,22 +93,18 @@ public class Vigilante {
 	
 	
 	
-	private Vehiculo cumpleReglasParqueadero(Vehiculo vehiculo, Calendar fechaIngreso) {
-		
-		if(!esPosibleIngreso(vehiculo, fechaIngreso)){
-			throw new ParqueaderoException("No es posible ingreso");
+	private void cumpleReglasParqueadero(Vehiculo vehiculo, Calendar fechaIngreso) {
+		if(esPosibleIngreso(vehiculo, fechaIngreso)){
+			noEstaParqueado(vehiculo);
 		}
-				
-		return noEstaParqueado(vehiculo);
 	}
 
 
-	private Vehiculo noEstaParqueado(Vehiculo vehiculo) {
+	public Vehiculo noEstaParqueado(Vehiculo vehiculo) {
 		
 		if(estaParqueado(vehiculo.getPlaca())){
 			throw new ParqueaderoException("El vehiculo ya se encuentra parqueado");
 		}
-		
 		return vehiculo;
 	}
 	
@@ -119,7 +117,7 @@ public class Vigilante {
 	
 	public boolean obtenerVehiculoPorPlaca(String placa){
 		
-		return repositorioVehiculo.obtenerVehiculo(placa)== null;
+		return repositorioVehiculo.obtenerVehiculo(placa) == null;
 	}
 
 

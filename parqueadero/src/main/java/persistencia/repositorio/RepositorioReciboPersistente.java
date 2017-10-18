@@ -11,6 +11,7 @@ import dominio.ListaRecibo;
 import dominio.Moto;
 import dominio.Recibo;
 import dominio.Vehiculo;
+import dominio.excepcion.ParqueaderoException;
 import dominio.repositorio.RepositorioRecibo;
 import persistencia.builder.ReciboBuilder;
 import persistencia.builder.VehiculoBuilder;
@@ -129,7 +130,7 @@ public class RepositorioReciboPersistente implements RepositorioRecibo {
 			return listaParqueados;
 		}
 		
-		return listaParqueados;
+		throw new ParqueaderoException("No hay vehiculos parqueados");
 	}
 	
 	
